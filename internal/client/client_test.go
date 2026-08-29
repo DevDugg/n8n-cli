@@ -16,7 +16,7 @@ func TestSanitizeWorkflowBody(t *testing.T) {
 				"typeVersion": 2,
 				"position":    []interface{}{100, 200},
 				"parameters":  map[string]interface{}{"path": "test"},
-				"webhookId":   "should-be-stripped",
+				"webhookId":   "stable-webhook-id",
 			},
 		},
 		"connections": map[string]interface{}{},
@@ -58,8 +58,8 @@ func TestSanitizeWorkflowBody(t *testing.T) {
 
 	nodes := clean["nodes"].([]interface{})
 	node := nodes[0].(map[string]interface{})
-	if _, ok := node["webhookId"]; ok {
-		t.Errorf("webhookId should be stripped from node")
+	if got := node["webhookId"]; got != "stable-webhook-id" {
+		t.Errorf("expected webhookId to be preserved, got %v", got)
 	}
 	for _, k := range []string{"id", "name", "type", "typeVersion", "position", "parameters"} {
 		if _, ok := node[k]; !ok {
